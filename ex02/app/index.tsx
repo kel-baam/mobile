@@ -27,14 +27,9 @@ export default function Calculator() {
             {row.map((symbol, index) => (
               <TouchableOpacity key={index} style={{
                 flex: 1,
-                // marginHorizontal: 5,
-              
-                // aspectRatio: 1,
                 backgroundColor: "#E4DFB5",
                 justifyContent: "center",
                 alignItems: "center",
-                // borderRadius: 5,
-                // margin:10
                 }}
                 onPress={() => {
                   console.log("button pressed :",symbol)
@@ -46,7 +41,6 @@ export default function Calculator() {
           </View>
         ))}
       </View>
-
     </View>
   );
 }
