@@ -2,29 +2,54 @@ import { Text, View,TouchableOpacity,Alert} from "react-native";
 import { useState } from "react";
 
 export default function Calculator() {
-  const [input, setInput] = useState("");    // user input
-  const [result, setResult] = useState("");  // calculation result
+  const [input, setInput] = useState(""); 
+  const [expression, setExpression] = useState("");
+  const [justCalculated, setJustCalculated] = useState(false);
 
-
+  const operators = ["+", "-", "*", "/"];
   const handlePress = (symbol:any) => {
+    if(input ==="Error")
+        setInput("")
   if (symbol === "C") {
-    // Clear last character
-    setInput(input.slice(0, -1));
+
+    if (input.length > 0 && !expression) {
+      setInput(input.slice(0, -1));
+    }
   } else if (symbol === "AC") {
-    // Clear everything
+
     setInput("");
-    setResult("");
+    setExpression("")
   } else if (symbol === "=") {
     try {
-      // Evaluate the expression
-      const evalResult = eval(input);  // ⚠ use with caution in real apps
-      setResult(evalResult.toString());
+      const evalResult = eval(input); 
+      setInput(evalResult.toString())
+      setExpression(input)
+      setJustCalculated(true)
+
+
     } catch (e) {
-      setResult("Error");
+      setInput("Error");
+      setExpression("")
+
     }
-  } else {
-    // Append symbol to input
-    setInput(input + symbol);
+  }
+  else {
+    if(operators.includes(symbol))
+    {
+      setExpression("")
+
+    }
+    else
+    {
+      if(justCalculated)
+      {
+        setInput("");
+        setExpression("")
+      }
+    }
+    
+    setJustCalculated(false)
+    setInput(prev => prev + symbol);
   }
 };
   const calculator = [
@@ -40,10 +65,13 @@ export default function Calculator() {
       <View style={{ flex: 2,
             justifyContent: "flex-end",
             alignItems: "flex-end",
-            padding: 20
-      }}>
-          <Text style={{fontSize: 24,color: "#888",}}>{input}</Text>
-          <Text style={{ fontSize: 55,color: "#fff",fontWeight: "bold",}} >{result}</Text>
+            padding: 15,
+        }}>
+          <Text 
+            style={{fontSize: 24,color: "#888"}}>{expression}</Text>
+          <Text 
+           
+          style={{  fontSize: 55,color: "#fff",fontWeight: "bold"}} >{input ? input : 0}</Text>
       </View>
       <View style={{flex:3}}>
         {calculator.map((row, rowIndex) => (
@@ -51,13 +79,9 @@ export default function Calculator() {
             {row.map((symbol, index) => (
               <TouchableOpacity key={index} style={{
                 flex: 1,
-              
-                aspectRatio: 1,
                 backgroundColor: "#E4DFB5",
                 justifyContent: "center",
                 alignItems: "center",
-                // borderRadius: 5,
-                // margin:10
                 }}
                 onPress={() => {
                   handlePress(symbol)
