@@ -2,11 +2,11 @@ import React from 'react'
 import { Text, View,StyleSheet } from "react-native";
 
 
-const currently = ({location}:any) => {
+const currently = ({location,search}:any) => {
   return (
     <View style={styles.container}>
         <Text style={styles.text}>
-               {location} currently
+               {location? location : search} currently
         </Text>
     </View>
   )
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize:30,
-    fontWeight:"bold"
+    fontWeight:"bold",
+    maxWidth:200,
 
   }
 })

@@ -16,37 +16,44 @@ const Tab = createMaterialTopTabNavigator();
 
 
 
-function Header({location, setLocation}:any) {
+function AppBar({location, setLocation,search, setSearch}:any) {
   return (
     <View style={styles.container}>
       <View style={{paddingHorizontal:20,gap:5, flexDirection:"row" ,justifyContent:"center",alignItems:"center",backgroundColor:"#3674B5",width:"80%"}}>
       <Feather name="search" size={20} color="#fff" />
       <TextInput
+        focusable={false}
+
         style={styles.search}
         placeholder="Search location"
-        value={location}
-        onChangeText={setLocation}
+        value={search}
+        onChangeText={(text)=>{
+          setSearch(text)
+          setLocation("")
+        }}
       >
       </TextInput>
 
       </View>
       <TouchableOpacity style={styles.iconButton} onPress={()=>{
           setLocation("Geolocation")
+          setSearch("")
       }}>
-
-        <FontAwesome name="location-arrow" size={24} color="#4FACFE" />
+        <FontAwesome name="location-arrow" size={22} color="#fff" />
       </TouchableOpacity>
     </View>
   );
 }
 
 
-export default function AppBar() {
+export default function Bar() {
   const [location,setLocation] = useState("")
+  const [search,setSearch] = useState("")
+
 
   return (
   <SafeAreaView style={{ flex: 1 }}>
-    <Header location={location} setLocation={setLocation}/>      
+    <AppBar location={location} setLocation={setLocation} search={search} setSearch={setSearch} />      
     <Tab.Navigator initialRouteName="currently" tabBarPosition="bottom"
         
         screenOptions={{
@@ -64,7 +71,7 @@ export default function AppBar() {
             ),
         }}
       >
-        {() => <Currently location={location} />}
+        {() => <Currently location={location} search={search} />}
 
       </Tab.Screen>
       <Tab.Screen
@@ -78,7 +85,7 @@ export default function AppBar() {
         
         }}
       >
-        {() => <Today location={location} />}
+        {() => <Today location={location} search={search} />}
       </Tab.Screen>
       <Tab.Screen
         name='weekly'
@@ -90,7 +97,7 @@ export default function AppBar() {
         ),   
         }}
       >
-        {() => <Weekly location={location} />}
+        {() => <Weekly location={location}  search={search} />}
 
       </Tab.Screen>
     </Tab.Navigator>
@@ -101,40 +108,37 @@ export default function AppBar() {
 const styles = StyleSheet.create({
 
   container: {
-    // flex:1,
     flexDirection: "row",
     alignItems: "center",
     height: 70,
     width: "100%",
     backgroundColor:"#3674B5",
-    // gap: 10,
     paddingHorizontal:10,
-
     justifyContent: "space-between",
-
-    // borderWidth:2,
-
   },
 
   search: {
-    // flex: 1,
-    // borderWidth:1,
     height: 40,
     width:"100%",
     backgroundColor: "#3674B5",
     borderRadius: 10,
     paddingHorizontal:5,
-    // paddingHorizontal: 10,
     color:"#b3afafff",
     fontSize: 14,
-     borderWidth: 0,  
+    // borderWidth: 1,  
+      // borderColor: "#ccc",
+      // borderWidth:"transpa"
+
+
+    // outlineStyle:"none"
+    outline:"none"
+    
+  // outlineStyle: "none", 
   },
 
   iconButton: {
     width: 36,
     height: 36,
-    borderRadius: 10,
-    backgroundColor: "#f2f2f2",
     justifyContent: "center",
     alignItems: "center",
   },
