@@ -2,11 +2,11 @@ import React from 'react'
 import { Text, View,StyleSheet } from "react-native";
 
 
-const currently = () => {
+const currently = ({location}:any) => {
   return (
     <View style={styles.container}>
         <Text style={styles.text}>
-                currently
+               {location} currently
         </Text>
     </View>
   )

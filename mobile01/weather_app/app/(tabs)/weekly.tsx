@@ -2,11 +2,11 @@ import React from 'react'
 import { Text, View,StyleSheet } from "react-native";
 
 
-const weekly = () => {
+const weekly = ({location}:any) => {
   return (
   <View style={styles.container}>
         <Text style={styles.text}>
-            weekly
+            {location} weekly
     </Text>
     </View>
   )

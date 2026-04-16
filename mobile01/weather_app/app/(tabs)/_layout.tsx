@@ -6,6 +6,7 @@ import Today from "./today";
 import Weekly from "./weekly";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
+import { useState } from "react";
 
 
 import { View,TextInput,TouchableOpacity,StyleSheet } from "react-native";
@@ -15,7 +16,7 @@ const Tab = createMaterialTopTabNavigator();
 
 
 
-function Header() {
+function Header({location, setLocation}:any) {
   return (
     <View style={styles.container}>
       <View style={{paddingHorizontal:20,gap:5, flexDirection:"row" ,justifyContent:"center",alignItems:"center",backgroundColor:"#3674B5",width:"80%"}}>
@@ -23,14 +24,16 @@ function Header() {
       <TextInput
         style={styles.search}
         placeholder="Search location"
+        value={location}
+        onChangeText={setLocation}
       >
-
       </TextInput>
 
       </View>
-      <TouchableOpacity style={styles.iconButton}>
+      <TouchableOpacity style={styles.iconButton} onPress={()=>{
+          setLocation("Geolocation")
+      }}>
 
-        {/* <Ionicons name="location" size={22} color="#4FACFE" /> */}
         <FontAwesome name="location-arrow" size={24} color="#4FACFE" />
       </TouchableOpacity>
     </View>
@@ -39,55 +42,57 @@ function Header() {
 
 
 export default function AppBar() {
+  const [location,setLocation] = useState("")
+
   return (
   <SafeAreaView style={{ flex: 1 }}>
-    <Header/>
-
-
+    <Header location={location} setLocation={setLocation}/>      
     <Tab.Navigator initialRouteName="currently" tabBarPosition="bottom"
-      
-      screenOptions={{
-        swipeEnabled: true,
         
-      }}
-    >
+        screenOptions={{
+          swipeEnabled: true,
+          
+        }}
+      >
       <Tab.Screen
-      name='currently'
-      component={Currently}
+        name='currently'
+        options={{
+          title:"Currently",
+          
+          tabBarIcon: ({ color  }) => (
+              <Ionicons name="partly-sunny" size={20} color={color} />
+            ),
+        }}
+      >
+        {() => <Currently location={location} />}
 
-      options={{
-        title:"Currently",
-        
-        tabBarIcon: ({ color  }) => (
-            <Ionicons name="partly-sunny" size={20} color={color} />
-          ),
-      }}
-      />
-       <Tab.Screen
-      name='today'
-       component={Today}
-      options={{
+      </Tab.Screen>
+      <Tab.Screen
+        name='today'
+        options={{
         title:"Today",
 
-        tabBarIcon: ({ color }) => (
-            <Ionicons name="today" size={20} color={color} />
-          ),
-      
-      }}
-      />
-       <Tab.Screen
-      name='weekly'
-       component={Weekly}
-
-      options={{
+          tabBarIcon: ({ color }) => (
+              <Ionicons name="today" size={20} color={color} />
+            ),
+        
+        }}
+      >
+        {() => <Today location={location} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name='weekly'
+        options={{
         title:"Weekly",
 
         tabBarIcon: ({ color}) => (
             <Ionicons name="calendar-outline" size={20} color={color} />
-          ),
-      
-      }}
-      />
+        ),   
+        }}
+      >
+        {() => <Weekly location={location} />}
+
+      </Tab.Screen>
     </Tab.Navigator>
   </SafeAreaView>
   );
