@@ -1,4 +1,3 @@
-import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Currently from "./currently";
@@ -7,16 +6,13 @@ import Weekly from "./weekly";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from "react";
-
-
 import { View,TextInput,TouchableOpacity,StyleSheet } from "react-native";
-import { Tabs } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 const Tab = createMaterialTopTabNavigator();
 
 
 
-function AppBar({location, setLocation,search, setSearch}:any) {
+function TopBar({setLocation,search, setSearch}:any) {
   return (
     <View style={styles.container}>
       <View style={{paddingHorizontal:20,gap:5, flexDirection:"row" ,justifyContent:"center",alignItems:"center",backgroundColor:"#3674B5",width:"80%"}}>
@@ -46,29 +42,26 @@ function AppBar({location, setLocation,search, setSearch}:any) {
 }
 
 
-export default function Bar() {
+export default function AppBar() {
   const [location,setLocation] = useState("")
   const [search,setSearch] = useState("")
 
 
   return (
   <SafeAreaView style={{ flex: 1 }}>
-    <AppBar location={location} setLocation={setLocation} search={search} setSearch={setSearch} />      
+    <TopBar setLocation={setLocation} search={search} setSearch={setSearch} />      
     <Tab.Navigator initialRouteName="currently" tabBarPosition="bottom"
-        
         screenOptions={{
           swipeEnabled: true,
-          
         }}
-      >
+    >
       <Tab.Screen
         name='currently'
         options={{
-          title:"Currently",
-          
-          tabBarIcon: ({ color  }) => (
-              <Ionicons name="partly-sunny" size={20} color={color} />
-            ),
+        title:"Currently",
+        tabBarIcon: ({ color  }) => (
+            <Ionicons name="partly-sunny" size={20} color={color} />
+          ),
         }}
       >
         {() => <Currently location={location} search={search} />}
@@ -78,11 +71,9 @@ export default function Bar() {
         name='today'
         options={{
         title:"Today",
-
-          tabBarIcon: ({ color }) => (
-              <Ionicons name="today" size={20} color={color} />
-            ),
-        
+        tabBarIcon: ({ color }) => (
+            <Ionicons name="today" size={20} color={color} />
+        ),
         }}
       >
         {() => <Today location={location} search={search} />}
@@ -91,7 +82,6 @@ export default function Bar() {
         name='weekly'
         options={{
         title:"Weekly",
-
         tabBarIcon: ({ color}) => (
             <Ionicons name="calendar-outline" size={20} color={color} />
         ),   
@@ -124,16 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal:5,
     color:"#b3afafff",
-    fontSize: 14,
-    // borderWidth: 1,  
-      // borderColor: "#ccc",
-      // borderWidth:"transpa"
-
-
-    // outlineStyle:"none"
-    outline:"none"
-    
-  // outlineStyle: "none", 
+    fontSize: 14
   },
 
   iconButton: {

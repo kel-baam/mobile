@@ -13,7 +13,6 @@ const weekly = ({location,search}:any) => {
 }
 
 
-
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -24,8 +23,7 @@ const styles = StyleSheet.create({
     fontSize:30,
     fontWeight:"bold",
     maxWidth:200,
-
-
   }
 })
+
 export default weekly

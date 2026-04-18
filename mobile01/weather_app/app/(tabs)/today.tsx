@@ -5,7 +5,7 @@ const today = ({location,search}:any) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-            {location? location : search} TODAY
+            {location? location : search} today
       </Text>
     </View>
   )
