@@ -15,7 +15,7 @@ const Tab = createMaterialTopTabNavigator();
 
 
 
-function TopBar({setLocation,search, setSearch,setPermission,setWeather}:any) {
+function TopBar({setLocation,search, setSearch,setPermission,setWeather,setError}:any) {
     const [suggestionLocation,useSuggestionLocation] = useState(null)
     
     const getPermission = async()=>
@@ -24,11 +24,11 @@ function TopBar({setLocation,search, setSearch,setPermission,setWeather}:any) {
         const permission =  await getCurrentLocation()
         if(permission)
           {
-            const weather = await getWeather(permission?.latitude,permission?.longitude)
+            const weather = await getWeather(permission?.latitude,permission?.longitude,setError)
             setWeather(weather)
             setLocation("")
             setSearch("")
-            const locationInfo = await getCityFromCoords(permission.latitude,permission.longitude)
+            const locationInfo = await getCityFromCoords(permission.latitude,permission.longitude,setError)
             setPermission(locationInfo)
             return;
           }
@@ -48,27 +48,48 @@ function TopBar({setLocation,search, setSearch,setPermission,setWeather}:any) {
           style={styles.search}
           placeholder="Search for location"
           value={search}
+          onSubmitEditing={async()=>{
+            const coords = await getCoords(search,setError)
+               if (!coords || coords.length === 0) {
+              useSuggestionLocation(null)
+              setError("❌ City not found. Try another name.")
+            } else {
+          
+             const weather = await getWeather(coords[0].latitude,coords[0].longitude,setError)
+                setPermission("")
+                setError("")
+                setSearch("")
+                setLocation(coords[0])
+                setWeather(weather)
+            }
+          }}
           onChangeText={async (text)=>{
             setSearch(text)
-            const coords = await getCoords(search)
-            useSuggestionLocation(coords)
+            const coords = await getCoords(search,setError)
+            if (!coords || coords.length === 0) {
+              useSuggestionLocation(null)
+            } else {
+          
+              useSuggestionLocation(coords)
+            }
           }}
         />
       </View>
     {search.length > 0 && (
         <View style={styles.resultsContainer}>
-          {Array.isArray(suggestionLocation) &&
+          {
             suggestionLocation?.map((item: any,index:number) => (
               <TouchableOpacity
                 key={item.id}
                 style={styles.resultItem}
+                
                 onPress={async () => {
                   setSearch(item.name);
                   setPermission("")
                   setSearch("");
+                  setError("")
                   setLocation([item]);
-                  const weather = await getWeather(suggestionLocation[index]?.latitude,suggestionLocation[index]?.longitude)
-                  
+                  const weather = await getWeather(suggestionLocation[index]?.latitude,suggestionLocation[index]?.longitude,setError)
                   setWeather(weather)
                 }}
               >
@@ -76,12 +97,18 @@ function TopBar({setLocation,search, setSearch,setPermission,setWeather}:any) {
                   {item.name}, {item.admin1 || item.admin2},{item.country}
                 </Text>
               </TouchableOpacity>
-            ))}
+            ))
+            
+          }
+            
         </View>
         )}
       <TouchableOpacity style={styles.iconButton} onPress={()=>{
         getPermission()
         setLocation("")
+        setError("")
+        setSearch("");
+
       }}>
         <FontAwesome name="location-arrow" size={22} color="#fff" />
       </TouchableOpacity>
@@ -95,11 +122,12 @@ export default function AppBar() {
   const [search,setSearch] = useState("")
   const [weather,setWeather] = useState("")
   const [permission,setPermission] = useState("")
+  const [error, setError] = useState(null);
 
 
   return (
   <SafeAreaView style={{ flex: 1 }}>
-    <TopBar setLocation={setLocation} search={search} setSearch={setSearch} setPermission={setPermission} setWeather={setWeather}/>      
+    <TopBar setLocation={setLocation} search={search} setSearch={setSearch} setPermission={setPermission} setWeather={setWeather} setError={setError}/>      
     <Tab.Navigator 
         initialRouteName="currently" 
         tabBarPosition="bottom"
@@ -116,7 +144,7 @@ export default function AppBar() {
           ),
         }}
       >
-        {() => <Currently location={location}   weather={weather} permission={permission}/>}
+        {() => <Currently location={location}   weather={weather} permission={permission} error={error} />}
 
       </Tab.Screen>
       <Tab.Screen
@@ -128,7 +156,7 @@ export default function AppBar() {
         ),
         }}
       >
-        {() => <Today location={location} weather={weather} permission={permission}/>}
+        {() => <Today location={location} weather={weather} permission={permission} error={error}/>}
       </Tab.Screen>
       <Tab.Screen
         name='weekly'
@@ -139,7 +167,7 @@ export default function AppBar() {
         ),   
         }}
       >
-        {() => <Weekly location={location}  weather={weather} permission={permission}/>}
+        {() => <Weekly location={location}  weather={weather} permission={permission} error={error}/>}
 
       </Tab.Screen>
     </Tab.Navigator>

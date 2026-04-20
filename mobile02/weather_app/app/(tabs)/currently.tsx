@@ -2,10 +2,18 @@ import React from 'react'
 import { Text, View,StyleSheet } from "react-native";
 import {getWeatherDescription} from "../utils/weatherCode"
 
-const currently = ({location,weather,permission}:any) => {
+const currently = ({location,weather,permission,error}:any) => {
  
-  
-  const item = location?location[0]:null
+const item = Array.isArray(location) ? location[0] : location;
+  if(error)
+  {
+    return (
+      <View style={styles.container}>
+        <Text>{error}</Text>
+      </View>
+    )
+
+  }
   return (
     
     <View style={styles.container}>
@@ -18,13 +26,12 @@ const currently = ({location,weather,permission}:any) => {
           <Text style={styles.text}>{weather ? `${weather?.current?.temperature_2m} °C`: ""}</Text>
           <Text style={styles.text}>{weather ? getWeatherDescription(weather?.current?.weather_code) : ""}</Text>
           <Text style={styles.text}>{weather ? ` ${weather?.current?.wind_speed_10m}  km/h` : ""}</Text>
-
         </>
         :
         !permission && !location?
         <>
-         <Text style={styles.textWarning} >Permission needed,</Text>
-                     <Text style={styles.textWarning}>Please enable location in settings</Text>
+         <Text style={styles.textWarning} >Geolocation  is not available,</Text>
+                     <Text style={styles.textWarning}>Please enable in your app settings</Text>
         </>
         :
         <>

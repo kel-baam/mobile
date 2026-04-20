@@ -13,11 +13,18 @@ export const getCurrentLocation = async () => {
   };
 
 
-  export const getCityFromCoords = async (lat: number, lon: number) => {
-  const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-    );
+  export const getCityFromCoords = async (lat: number, lon: number,setError) => {
 
-  const data = await res.json();
-  return data?.address; 
+    try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+        if (!res.ok) 
+          throw new Error("API error");
+        const data = await res.json();
+        return data?.address; 
+        }
+
+      catch{
+      setError("Connection error. Please try again.");
+
+    }
 };

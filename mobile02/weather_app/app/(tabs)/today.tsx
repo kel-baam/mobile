@@ -3,11 +3,21 @@ import { Text, View,StyleSheet } from "react-native";
 import { ScrollView } from "react-native";
 import {getWeatherDescription} from "../utils/weatherCode"
 
-const today = ({location,weather,permission}:any) => {
+const today = ({location,weather,permission,error}:any) => {
 
+
+
+   if(error)
+   {
+     return (
+       <View style={styles.container}>
+         <Text>{error}</Text>
+       </View>
+     )
+   }
 
   const today = new Date().toISOString().split("T")[0];
-  const item = location?location[0]:null
+const item = Array.isArray(location) ? location[0] : location;
 
   const todayData = weather?.hourly?.time?.map((time:string, index:number)=>({
     time: time,
@@ -17,7 +27,7 @@ const today = ({location,weather,permission}:any) => {
        
     })).filter((item:any)=>item?.time?.startsWith(today))
     
-
+  
   return (
     <View style={styles.container}>
         {
