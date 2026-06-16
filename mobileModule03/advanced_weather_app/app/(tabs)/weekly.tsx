@@ -1,70 +1,14 @@
 import React from 'react'
 import { Text, View,StyleSheet,Dimensions } from "react-native";
 import { ScrollView } from "react-native";
-import { getWeatherDescription } from '../utils/weatherCode';
-import { LineChart } from "react-native-chart-kit";
-import { ImageBackground } from "react-native";
 import { Image } from "react-native";
-import { getWeatherImage } from "../utils/weatherPicture";
+import { getWeatherImage } from "../../utils/weatherPicture";
 
-const Chart = ({data}:any) => {
-const screenWidth  = data.length * 40 || Dimensions.get("window").width
+import { Chart } from '@/component/Chart';
 
-  return (<View style={styles.container }>
-    <LineChart
-    data={{
-      labels:data.map((item:any) => item.time),
-     datasets: [
-      {
-        data: data.map((item: any) => item.temperature_2m_max),
-        color: (opacity = 1) => `rgba(255, 99, 132, ${opacity})`, // 🔴 max (red)
-        strokeWidth: 2,
-      },
-      {
-        data: data.map((item: any) => item.temperature_2m_min),
-        color: (opacity = 1) => `rgba(54, 162, 235, ${opacity})`, // 🔵 min (blue)
-        strokeWidth: 2,
-      },
-    ],
-    }}
-    width={screenWidth} // ✅ REQUIRED
-
-    height={220}
-    yAxisLabel=""
-    yAxisSuffix="°C"
-    yAxisInterval={1} 
-    chartConfig={{
-          backgroundColor: "#000",
-          backgroundGradientFrom: "#1e2923",
-          backgroundGradientTo: "#08130d",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255,255,255,${opacity})`,
-          style: {
-                borderRadius: 16,
-              },
-              propsForDots: {
-                r: "1",
-                strokeWidth: "3",
-                stroke: "#fff",
-              },
-            
-
-        }}
-        bezier
-
-    >
-
-    </LineChart>
-
-  </View>)
-
-}
 const weekly = ({location,weather,permission,error,loading}:any) => {
 const item = Array.isArray(location) ? location[0] : location;
   
-
-
 
   if (loading) {
       return (
@@ -100,26 +44,28 @@ const formatDate = (time:string) => {
 
     {
       permission ?
-        <View  style={{flex:1,alignContent:"center",justifyContent:"center",width:"100%"}} >
+        <View  style={{flex:1,width:"100%"}} >
           <Text style={[styles.text, { color: '#0e7fe2',fontSize:28 }]} >{permission?.city}</Text>
           <Text style={styles.text} >{permission?.state},{permission?.country}</Text>
-          <ScrollView horizontal style={{width:"100%",flexDirection:"column", }}>
-            <View style={{alignItems:"center",justifyContent:"center",minWidth:"100%"}}>
-              < Chart  data={weeklyData} />
+          <ScrollView horizontal style={{width:"100%"}}>
+            <View style={{}}>
+              < Chart  data={weeklyData} mode="minmax" />
             </View>
           </ScrollView>
-          <ScrollView horizontal style={{width:"100%",flexDirection:"column"}}>
-                {weeklyData?.map((item:any, index:number) => ( 
-                  <View style={styles.weatherList}>
-                    <Text style={styles.text}>{item.time}</Text>
-                      <Image
-                        source={getWeatherImage(weather?.current?.weather_code)}
-                        style={{ width: 50, height: 50 }}
-                      />
-                    <Text style={styles.temperature_max}>{item.temperature_2m_max}°C <span style={{fontSize:12}} >max</span></Text>
-                    <Text style={styles.temperature_min}>{item.temperature_2m_min}°C  <span style={{fontSize:12}} >min</span></Text>
-                  </View>
-                ))}
+          <ScrollView horizontal style={{width:"100%",maxHeight: 150}}
+           contentContainerStyle={{ flexDirection: "row"}}
+          >
+            {weeklyData?.map((item:any, index:number) => ( 
+              <View key={index} style={styles.weatherList}>
+                <Text style={styles.text}>{item.time}</Text>
+                  <Image
+                    source={getWeatherImage(weather?.current?.weather_code)}
+                    style={{ width: 50, height: 50 }}
+                  />
+                <Text style={styles.temperature_max}>{item.temperature_2m_max}°C <Text style={{fontSize:12}} >max</Text></Text>
+                <Text style={styles.temperature_min}>{item.temperature_2m_min}°C  <Text style={{fontSize:12}} >min</Text></Text>
+              </View>
+            ))}
           </ScrollView>
         </View>
       :
@@ -132,21 +78,22 @@ const formatDate = (time:string) => {
       <View style={{flex:1,alignContent:"center",justifyContent:"center",width:"100%"}}>
         <Text style={[styles.text,{ color: '#0e7fe2',fontSize:28 }]} >{item ? `${item?.name},` : ""}</Text>
         <Text style={styles.text} >{item ? `${item?.admin1 || item?.admin2},` : "" },{item ?  `${item?.country}` : "" }</Text>
-        <ScrollView horizontal style={{width:"100%",flexDirection:"column"}}>
-            <View style={{alignItems:"center",justifyContent:"center",minWidth:"100%"}}>
-              < Chart  data={weeklyData} />
+        <ScrollView horizontal style={{width:"100%"}}>
+            <View style={{}}>
+              < Chart  data={weeklyData} mode="minmax" />
             </View>
         </ScrollView>
-        <ScrollView horizontal style={{width:"100%",flexDirection:"column" }}>
+        <ScrollView horizontal style={{width: "100%", maxHeight: 150} }
+         contentContainerStyle={{ flexDirection: "row"}}>
           {weeklyData?.map((item:any, index:number) => ( 
-            <View style={styles.weatherList}>
+            <View key={index} style={styles.weatherList}>
               <Text style={styles.text}>{item.time}</Text>
                 <Image
                   source={getWeatherImage(weather?.current?.weather_code)}
                   style={{ width: 50, height: 50 }}
                 />
-              <Text style={styles.temperature_max}>{item.temperature_2m_max} °C <span style={{fontSize:12}} >max</span></Text>
-              <Text style={styles.temperature_min}>{item.temperature_2m_min}°C <span style={{fontSize:12}} >min</span></Text>
+              <Text style={styles.temperature_max}>{item.temperature_2m_max} °C <Text style={{fontSize:12}} >max</Text></Text>
+              <Text style={styles.temperature_min}>{item.temperature_2m_min}°C <Text style={{fontSize:12}} >min</Text></Text>
             </View>
           ))}
         </ScrollView>

@@ -41,8 +41,8 @@ const item = Array.isArray(location) ? location[0] : location;
         :
         !permission && !location?
         <>
-          <Text style={styles.textWarning} >Permission needed,</Text>
-          <Text style={styles.textWarning}>Please enable location in settings</Text>
+         <Text style={styles.textWarning} >Geolocation  is not available,</Text>
+                     <Text style={styles.textWarning}>Please enable in your app settings</Text>
         </>
         :
         <>

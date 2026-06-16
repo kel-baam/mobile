@@ -8,9 +8,9 @@ import Feather from '@expo/vector-icons/Feather';
 import { useEffect, useState } from "react";
 import { View,TextInput,TouchableOpacity,StyleSheet,Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {getCoords,getWeather} from "../services/weatherApi"
-import {getCurrentLocation} from "../services/locationApi"
-import { getCityFromCoords } from "../services/locationApi";
+import {getCoords,getWeather} from "../../services/weatherApi"
+import { getCityFromCoords } from "../../services/locationApi";
+import {getCurrentLocation} from "../../services/locationApi"
 import { ImageBackground } from "react-native";
 import { Dimensions } from "react-native";
 
@@ -141,7 +141,7 @@ export default function AppBar() {
   return (
 
   <ImageBackground
-    source={require("../../assets/images/test9.jpeg")}
+    source={require("../../assets/images/sky.jpeg")}
     style={{ flex: 1,width, height }}
       resizeMode="cover"
   >
@@ -155,8 +155,8 @@ export default function AppBar() {
               
               screenOptions={{
                 swipeEnabled: true,
-                tabBarActiveTintColor: "#F97316",   // 🔥 active tab (orange)
-                    tabBarInactiveTintColor: "#e3e3e3", // gray
+                tabBarActiveTintColor: "#F97316",
+                    tabBarInactiveTintColor: "#e3e3e3",
 
               tabBarStyle: {backgroundColor: "rgba(0,0,0,0.3)",},
                 sceneStyle: {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
       gap: 5,
       justifyContent: "center",
-      width: "80%", // 🔥 important
+      width: "80%",
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "#3674B5",
